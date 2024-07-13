@@ -1,0 +1,22 @@
+chat-container{
+    width: 80%;
+    margin: 50px auto;
+    border: 1px solid #ccc;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+chat-header{
+    padding: 10px;
+    background-color: #eee;
+}
+
+chat-header h2{
+    margin: 0;
+    font-size: 18px;
+}
+
+chat-message{
+    height: 300px;
+    overflow: auto;
+    padding: 10px;
+}
