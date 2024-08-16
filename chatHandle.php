@@ -17,6 +17,31 @@ function handle_write() { //處理訊息寫入
                 $text .= "user:::" . $message . ":::::";
                 file_put_contents($file, $text);
             }
+
+            //POST資料到AI模型
+            $ch = curl_init();
+            $postData = array(
+                "input_string" => $message
+            );
+            $jsonData = json_encode($postData);
+            curl_setopt($ch, CURLOPT_URL, "http://140.128.122.19:5070/process");
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($jsonData)
+            ));
+            $response = curl_exec($ch);
+            $responseData = json_decode($response, true);
+            $rs = json_decode($response, true);
+            $botText = file_get_contents($file);
+            $botText .= "bot:::" . $responseData['result'] . ":::::";
+            file_put_contents($file, $botText);
+            
+            curl_close($ch);
+
             echo json_encode(array('status' => 'success', 'message' => 'Message received.'));
         }
     } else {

@@ -30,16 +30,24 @@ get_header(); ?>
 <!-- <link rel="stylesheet" type="text/css" href="css/chat.css"> -->
 <style>
     .user-message {
-        background-color: #DCF8C6; /* User message background color */
-        align-self: flex-end; /* 用戶對話向右對齊 */
+        background-color: #DCF8C6; /* 用户消息背景色 */
+        align-self: flex-end;
         text-align: right;
-        height: 50px;
+        padding: 10px; /* 添加内边距，使内容与边框之间有间距 */
+        display: inline-block; /* 让元素根据内容自动扩展宽度 */
+        margin-bottom: 10px;
+        margin-left: auto; /* 左边自动填充剩余空间 */
+        border-radius: 5px; /* 可选：添加圆角，使对话框看起来更美观 */
+        max-width: 80%; /* 可选：设置最大宽度，防止对话框过宽 */
     }
 
     .bot-message {
         background-color: #E8E8E8; /* Bot message background color */
         align-self: flex-start; /* bot對話向左對齊 */
-        height: 50px;
+        /* height: 50px; */
+        padding: 10px; /* 添加內邊距，使內容與邊框之間有間距 */
+        display: inline-block; /* 讓元素根據內容自動擴展寬度 */
+        margin-bottom: 10px;
     }
 
     .chat-container {
@@ -69,7 +77,7 @@ get_header(); ?>
     <div class="chat-form">
         <form>
             <textarea name="message" id="msgBox" placeholder="輸入訊息..." style="width: 92%"></textarea>
-            <button type="submit">Send</button>
+            <button type="submit" id="submitbtn">Send</button>
         </form>
     </div>
 </div>
@@ -120,6 +128,7 @@ get_header(); ?>
     jQuery(document).ready(function($) {
     $('form').on('submit', function(event) { //使用者按下送出訊息按鈕
         event.preventDefault(); // 防止表單默認提交
+        $("#submitbtn").attr("disabled", true);
 
         var message = $('textarea[name="message"]').val();
         $.ajax({ //去呼叫後端處理訊息輸入程式
@@ -171,6 +180,10 @@ get_header(); ?>
             },
             error: function(xhr, status, error) {
                 console.log('AJAX Error: ' + error);
+            },
+            complete: function() {
+                // 確保無論請求成功或失敗後都能恢復按鈕
+                $("#submitbtn").attr("disabled", false);
             }
         });
     });
