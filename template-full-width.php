@@ -31,7 +31,6 @@ get_header(); ?>
 <style>
     .user-message {
         background-color: #DCF8C6; /* 用户消息背景色 */
-        align-self: flex-end;
         text-align: right;
         padding: 10px; /* 添加内边距，使内容与边框之间有间距 */
         display: inline-block; /* 让元素根据内容自动扩展宽度 */
@@ -54,32 +53,34 @@ get_header(); ?>
         display: flex;
         flex-direction: column;
     }
+
+    .user-message-container {
+        display: flex;
+        justify-content: flex-end; /* 將內部內容推到右側 */
+        width: 100%;
+    }
 </style>
 <?php
 // echo do_shortcode('[members_access role="subscriber"]這段內容只有擁有網站管理員的用戶可以看到。[/members_access]');
 ?>
 
-<div class="chat-container">
-    <div class="chat-header">
-        <h2>Chat</h2>
-    </div>
-    <div class="chat-message" id="chatForm" style="height: 800px;overflow: auto;padding: 10px;border:2px solid black;">
-        <div class="bot-message">
-            你好，需要什麼服務嗎?
-        </div>
-        <br />
-        <div name="chatMessage" id="chatMessage"></div>
-        <!-- <div class="user-message">
-            這是用戶的一句話的範例。
-        </div> -->
+
+<div class="chat-header">
+    <h2>Chat</h2>
+</div>
+<div class="chat-container" id="chatForm" style="height: 800px;overflow: auto;padding: 10px;border:2px solid black;">
+    <div class="bot-message" id="eleTest">
+        你好，需要什麼服務嗎?
     </div>
     <br />
-    <div class="chat-form">
-        <form>
-            <textarea name="message" id="msgBox" placeholder="輸入訊息..." style="width: 92%"></textarea>
-            <button type="submit" id="submitbtn">Send</button>
-        </form>
-    </div>
+    <div name="chatMessage" class="chat-container" id="chatMessage"></div>
+</div>
+<br />
+<div class="chat-form">
+    <form>
+        <textarea name="message" id="msgBox" placeholder="輸入訊息..." style="width: 92%"></textarea>
+        <button type="submit" id="submitbtn">傳送</button>
+    </form>
 </div>
 
 <?php get_footer(); ?>
