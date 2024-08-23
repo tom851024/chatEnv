@@ -80,6 +80,7 @@ get_header(); ?>
     <form>
         <textarea name="message" id="msgBox" placeholder="輸入訊息..." style="width: 92%"></textarea>
         <button type="submit" id="submitbtn">傳送</button>
+        <img id="spinner" src="/wp-content/themes/academica/images/spinner.gif" alt="Loading" style="width: 5%">
     </form>
 </div>
 
@@ -127,11 +128,36 @@ get_header(); ?>
 
 
     jQuery(document).ready(function($) {
+    $("#spinner").hide();
+    $('#msgBox').on('keydown', function(event) {
+        if (event.key === "Enter" && !event.shiftKey) { // 監聽 Enter 鍵，不包括 Shift+Enter
+            event.preventDefault(); // 防止默認的換行行為
+            $('#submitbtn').click(); // 觸發送出按鈕的點擊事件
+        }
+    });
+
     $('form').on('submit', function(event) { //使用者按下送出訊息按鈕
         event.preventDefault(); // 防止表單默認提交
-        $("#submitbtn").attr("disabled", true);
+        tmpText = $('#msgBox').val();
+        if(tmpText === '') { //如果文字是空的，就不會送出
+            return;
+        }
+
+        // $("#submitbtn").attr("disabled", true);
+        $("#submitbtn").hide();
+        $("#spinner").show();
+        $("#msgBox").attr("disabled", true);
+
+        //先將使用者打的文字送出
+        if(tmpText != undefined) {
+            tmpText = tmpText.replace(/\n/g, '<br>'); //將換行符號轉換成 <br>
+        }
+        userText = '<div class="user-message">' + tmpText + '</div><br />'
+        $('#chatMessage').append(userText);
+        scrollToBottom(); //會自動捲到最下面
 
         var message = $('textarea[name="message"]').val();
+        $('#msgBox').val(''); // 清空输入框
         $.ajax({ //去呼叫後端處理訊息輸入程式
             url: 'http://140.128.122.24/wp-content/themes/academica/chatHandle.php',
             type: 'POST',
@@ -172,7 +198,7 @@ get_header(); ?>
                             });
 
                             scrollToBottom(); //會自動捲到最下面
-                            $('#msgBox').val(''); // 清空输入框
+                            // $('#msgBox').val(''); // 清空输入框
                         }
                     });
                 } else {
@@ -184,7 +210,10 @@ get_header(); ?>
             },
             complete: function() {
                 // 確保無論請求成功或失敗後都能恢復按鈕
-                $("#submitbtn").attr("disabled", false);
+                // $("#submitbtn").attr("disabled", false);
+                $("#submitbtn").show();
+                $("#spinner").hide();
+                $("#msgBox").attr("disabled", false);
             }
         });
     });
