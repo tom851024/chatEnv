@@ -82,6 +82,8 @@ get_header(); ?>
         <button type="submit" id="submitbtn">傳送</button>
         <img id="spinner" src="/wp-content/themes/academica/images/spinner.gif" alt="Loading" style="width: 5%">
     </form>
+    <br />
+    <button type="button" id="clear">清空</button>
 </div>
 
 <?php get_footer(); ?>
@@ -134,6 +136,19 @@ get_header(); ?>
             event.preventDefault(); // 防止默認的換行行為
             $('#submitbtn').click(); // 觸發送出按鈕的點擊事件
         }
+    });
+
+    $('#clear').click(function() { //清空按鈕動作
+        $.ajax({
+            url: 'http://140.128.122.24/wp-content/themes/academica/chatHandle.php',
+            type: 'POST',
+            data: {
+                action: 'clear',
+            },
+            success: function(response) {
+                $('#chatMessage').empty(); //清空訊息
+            }
+        })
     });
 
     $('form').on('submit', function(event) { //使用者按下送出訊息按鈕
